@@ -1,3 +1,4 @@
+from typing_extensions import Self
 import alpaca_trade_api as tradeapi
 import secretsConfig as secrets
 import pandas as pd
@@ -6,6 +7,8 @@ import requests
 import numpy as np
 from math import floor
 from termcolor import colored as cl
+import schedule
+import time
 
 
 
@@ -25,6 +28,8 @@ class PythonTradingBot :
         print("Got Microsoft Trade?")
 
     def buyShares(self,rsiIndicator) :
+        print("the rsi indicator was : ",rsiIndicator, " setting it to 25 for instant buy")
+        rsiIndicator = 25
         if(rsiIndicator < 30):
             order_confirmation = self.alpaca.submit_order(
                 symbol='BNGO',
@@ -53,7 +58,7 @@ plt.style.use('fivethirtyeight')
 plt.rcParams['figure.figsize'] = (20, 10)
 
 def get_historical_data(symbol, start_date = None):
-    api_key = secrets.AlPHA_VANTAGE_API_KEY
+    api_key = secrets.ALPHA_VANTAGE_API_KEY
     ## ENTIRE OUTPUT??? how much data is this???
     api_url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={api_key}&outputsize=full'
     raw_df = requests.get(api_url).json()
@@ -100,6 +105,18 @@ alpha_vantage_RSI = ibm['rsi_14'][0]
 
 #_____________________________________________Buying or selling stock
 
-runner = PythonTradingBot()
 
-runner.buyShares(alpha_vantage_RSI)
+
+def runbot(t) :
+    runner = PythonTradingBot()
+    runner.buyShares(alpha_vantage_RSI)
+    return
+
+schedule.every().day.at("12:50").do(runbot, 'Running trade its 12:50')
+
+while True:
+    schedule.run_pending()
+    print("waiting 1 min ", time.localtime())
+    time.sleep(60)
+
+
