@@ -28,14 +28,13 @@ class PythonTradingBot :
         print("Got Microsoft Trade?")
 
     def buyShares(self,rsiIndicator) :
-        print("the rsi indicator was : ",rsiIndicator, " setting it to 25 for instant buy")
-        rsiIndicator = 25
+        print("the rsi indicator for RYCEY was : ",rsiIndicator )
         if(rsiIndicator < 30):
             order_confirmation = self.alpaca.submit_order(
-                symbol='BNGO',
+                symbol='RYCEY',
                 side='buy',
                 type='market',
-                qty='1',
+                qty='100',
                 time_in_force='day',
             )
             print(order_confirmation)
@@ -43,7 +42,7 @@ class PythonTradingBot :
         elif(rsiIndicator > 70) :
             #Test this code
             self.alpaca.cancel_all_orders()
-            share_amount = self.alpaca.close_position("BNGO",{'percentage': 100})
+            share_amount = self.alpaca.close_position("RYCEY")
             print ("Stock was sold")
         else:
             print("Stock was held")
@@ -73,7 +72,7 @@ def get_historical_data(symbol, start_date = None):
         df = df[df.index >= start_date]
     return df
 
-ibm = get_historical_data('BNGO', '2020-01-01')
+ibm = get_historical_data('RYCEY', '2020-01-01')
 ibm
 
 #**************** RSI
@@ -107,17 +106,17 @@ alpha_vantage_RSI = ibm['rsi_14'][0]
 
 
 
-def runbot(t) :
-    runner = PythonTradingBot()
-    runner.buyShares(alpha_vantage_RSI)
-    return
+#def runbot(t) :
+runner = PythonTradingBot()
+runner.buyShares(alpha_vantage_RSI)
+#    return
 
-schedule.every().day.at("12:50").do(runbot, 'Running trade its 12:50')
+# schedule.every().day.at("09:00").do(runbot, 'Running trade its 09:00')
 
-while True:
-    schedule.run_pending()
-    print("waiting 1 min ", time.localtime())
-    time.sleep(60)
+#while True:
+#    schedule.run_pending()
+#    print("waiting 1 min ", time.localtime())
+#    time.sleep(60)
 
 
 
