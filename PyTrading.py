@@ -11,15 +11,9 @@ from math import floor
 from termcolor import colored as cl
 import time
 
-
-
-
-ALPACA_BASE_URL = "https://paper-api.alpaca.markets"
-Stock = "CHPT";
-
-
-rsiIndicator = AlphaU.get_rsi(Stock)
-AlpacaU.Alpaca().buyShares(rsiIndicator,Stock)
+for stock in secrets.STOCK_LIST:
+    rsiIndicator = AlphaU.get_rsi(stock)
+    AlpacaU.Alpaca().buyShares(rsiIndicator,stock)
 #    return
 
 # schedule.every().day.at("09:00").do(runbot, 'Running trade its 09:00')

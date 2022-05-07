@@ -1,3 +1,4 @@
+import re
 from typing_extensions import Self
 import alpaca_trade_api as tradeapi
 import secretsConfig as secrets
@@ -55,12 +56,15 @@ def get_rsiList(close, lookback):
 
 
 def get_rsi(currentStock):
-    ibm = get_historical_data(currentStock, '2020-01-01')
-    ibm['rsi_14'] = get_rsiList(ibm['close'], 14)
-    ibm = ibm.dropna()
-    # rsi_14 has an array of indicators by day
-    return  ibm['rsi_14'][0]
-
+    try :
+        ibm = get_historical_data(currentStock, '2020-01-01')
+        ibm['rsi_14'] = get_rsiList(ibm['close'], 14)
+        ibm = ibm.dropna()
+        # rsi_14 has an array of indicators by day
+        return  ibm['rsi_14'][0]
+    except:
+        print("An error occurred while calculating the RSI selling all positions")
+        return 100
 
 
 
