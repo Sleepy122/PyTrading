@@ -1,1 +1,2 @@
-# PyTrading
+# PyTrading 
+Trading API
